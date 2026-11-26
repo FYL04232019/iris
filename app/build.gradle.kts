@@ -1,11 +1,10 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
 }
 
 android {
     namespace = "app.iris"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "app.iris"
@@ -40,10 +39,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions { jvmTarget = "17" }
+}
+
+kotlin {
+    compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) }
 }
 
 dependencies {
-    // GeckoView, release channel: the newest release when the APK is built (pinned once the test is done).
-    implementation("org.mozilla.geckoview:geckoview:+")
+    // GeckoView, release channel (Firefox 161). Moved up by hand with each Firefox release.
+    implementation("org.mozilla.geckoview:geckoview:161.0.20261118180411")
 }
