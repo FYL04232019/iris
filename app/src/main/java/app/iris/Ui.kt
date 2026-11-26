@@ -18,6 +18,15 @@ object Ui {
     fun dp(c: Context, v: Int): Int =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), c.resources.displayMetrics).toInt()
 
+    /** Android 15 draws apps under the status and navigation bars: keep the content out from under them. */
+    fun keepOutOfBars(v: android.view.View) {
+        v.setOnApplyWindowInsetsListener { view, insets ->
+            val bars = insets.getInsets(android.view.WindowInsets.Type.systemBars() or android.view.WindowInsets.Type.ime())
+            view.setPadding(view.paddingLeft, bars.top, view.paddingRight, bars.bottom)
+            insets
+        }
+    }
+
     fun round(c: Context, color: Int, radiusDp: Int) = GradientDrawable().apply {
         setColor(color)
         cornerRadius = dp(c, radiusDp).toFloat()

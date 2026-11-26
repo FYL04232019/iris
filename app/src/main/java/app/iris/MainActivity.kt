@@ -52,7 +52,9 @@ class MainActivity : Activity() {
         root.addView(row, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Ui.dp(c, 48)).apply { topMargin = Ui.dp(c, 12) })
 
         root.addView(Ui.text(c, "页面顶上会出一块结果：①页面开头注入 ②后台请求带不带登录 ③进到网页里执行代码 ④开新标签再关掉。人机验证直接在页面里过，看能不能过。截图发回来。", 12f, Ui.MUTED).apply { setPadding(0, Ui.dp(c, 16), 0, 0) })
-        setContentView(root)
+        val outer = android.widget.FrameLayout(c).apply { setBackgroundColor(Ui.BG); addView(root) }
+        Ui.keepOutOfBars(outer)
+        setContentView(outer)
 
         IrisApp.instance.withTestExtension { }
     }

@@ -48,9 +48,17 @@ class BrowserActivity : Activity() {
             background = Ui.round(c, Ui.CARD, 18)
         }
         bar.addView(count, LinearLayout.LayoutParams(Ui.dp(c, 36), Ui.dp(c, 36)).apply { leftMargin = Ui.dp(c, 12) })
+        // ✕: closes the tab on screen (the one under it comes back; the last one closed, back home).
+        val close = Ui.text(c, "✕", 14f, Ui.FG).apply {
+            gravity = android.view.Gravity.CENTER
+            background = Ui.round(c, Ui.CARD, 18)
+            setOnClickListener { Tabs.current?.let { Tabs.close(it) } }
+        }
+        bar.addView(close, LinearLayout.LayoutParams(Ui.dp(c, 36), Ui.dp(c, 36)).apply { leftMargin = Ui.dp(c, 12) })
         root.addView(bar)
         view = GeckoView(c)
         root.addView(view, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        Ui.keepOutOfBars(root)
         setContentView(root)
 
         Tabs.onChange = { runOnUiThread { show() } }

@@ -45,8 +45,9 @@ object Tabs {
                 session.open(IrisApp.instance.runtime)
                 watchClose(session, ext)
                 list += session
+                // The new tab's address is ours to load (GeckoView leaves it blank otherwise).
+                createDetails.url?.let { session.loadUri(it) }
                 onChange?.invoke()
-                // The extension loads its URL itself once it has the session.
                 return GeckoResult.fromValue(session)
             }
         })

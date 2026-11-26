@@ -17,9 +17,10 @@ browser.runtime.onMessage.addListener(async (msg, sender) => {
   if (msg.kind === 'tab') {
     // Consora opens a tab for a task and closes it when done.
     try {
-      const tab = await browser.tabs.create({ url: msg.url, active: true });
+      const timeout = (ms, what) => new Promise((_, no) => setTimeout(() => no(new Error(what + ' 超过 ' + ms / 1000 + ' 秒没回应')), ms));
+      const tab = await Promise.race([browser.tabs.create({ url: msg.url, active: true }), timeout(8000, 'tabs.create')]);
       await new Promise((r) => setTimeout(r, 2500));
-      await browser.tabs.remove(tab.id);
+      await Promise.race([browser.tabs.remove(tab.id), timeout(5000, 'tabs.remove')]);
       return { ok: true, id: tab.id };
     } catch (e) {
       return { ok: false, error: String(e && e.message || e) };
