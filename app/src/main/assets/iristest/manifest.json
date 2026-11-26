@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "Iris test",
+  "version": "0.1",
+  "description": "Checks what the scripts need: injection at the start, a background request with the site's login, code inside the page, tabs.",
+  "browser_specific_settings": { "gecko": { "id": "test@iris.app" } },
+  "permissions": ["<all_urls>", "tabs", "storage"],
+  "background": { "scripts": ["bg.js"] },
+  "content_scripts": [
+    { "matches": ["<all_urls>"], "js": ["content.js"], "run_at": "document_start", "all_frames": false }
+  ]
+}

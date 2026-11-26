@@ -1,0 +1,40 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Build
+        run: gradle --no-daemon assembleRelease
+
+      - name: Which GeckoView
+        run: gradle --no-daemon -q :app:dependencies --configuration releaseRuntimeClasspath | grep -i geckoview | head -3 || true
+
+      # Each build is a release on the repository's Releases page: open it on the phone, download, install.
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk iris-0.1.${{ github.run_number }}.apk
+          gh release create "v0.1.${{ github.run_number }}" iris-0.1.${{ github.run_number }}.apk \
+            --title "Iris 0.1.${{ github.run_number }}（试做版）" \
+            --notes "测试版：GeckoView 内核 + 内置测试扩展。下载 APK 安装（要允许安装未知来源应用）。提交：${{ github.sha }}"
