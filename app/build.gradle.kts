@@ -35,6 +35,10 @@ android {
         }
     }
 
+    // The engine's native libraries compressed in the APK (unpacked once at install): about 200 MB
+    // uncompressed, a fraction of that to download.
+    packaging { jniLibs { useLegacyPackaging = true } }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
